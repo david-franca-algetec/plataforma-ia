@@ -46,7 +46,6 @@ export default function Home() {
     }).then((res) => {
       setResponse(res.data)
       show()
-      reset();
       setLoading(false);
     })
       .catch((error) => {
@@ -85,7 +84,7 @@ export default function Home() {
           <Button label="Enviar" type="submit" icon="pi pi-check" loading={loading}/>
         </form>
         {response && (
-          <div className="card p-3 w-full md:w-30rem flex justify-content-center flex-column text-center">
+          <div className="flex justify-content-center flex-column text-center">
             <h4>{response.asessment}</h4>
             <p>
               Sua nota é: <b>{response.score}</b> / 10
