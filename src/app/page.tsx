@@ -8,6 +8,7 @@ import {useRef, useState} from "react";
 import {InputTextarea} from "primereact/inputtextarea";
 import {Card} from "primereact/card";
 import axios from "axios";
+import {Rating} from "primereact/rating";
 
 interface Response {
   question: string,
@@ -40,7 +41,7 @@ export default function Home() {
 
   const onSubmit = (data: { answer: string }) => {
     setLoading(true);
-    axios.post<Response>('http://lastops.pythonanywhere.com', {
+    axios.post<Response>('/api/send', {
       answer: data.answer
     }).then((res) => {
       setResponse(res.data)
@@ -84,8 +85,15 @@ export default function Home() {
           <Button label="Enviar" type="submit" icon="pi pi-check" loading={loading}/>
         </form>
         {response && (
-          <div className=" card p-3 w-full md:w-30rem">
-            {JSON.stringify(response)}
+          <div className="card p-3 w-full md:w-30rem flex justify-content-center flex-column text-center">
+            <h4>{response.asessment}</h4>
+            <p>
+              Sua nota é: <b>{response.score}</b> / 10
+            </p>
+            <div className="flex justify-content-center">
+
+              <Rating value={response.score / 2} readOnly cancel={false}/>
+            </div>
           </div>
         )}
       </Card>
