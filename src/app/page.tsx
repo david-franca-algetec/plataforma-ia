@@ -33,8 +33,6 @@ export default function Home() {
     control,
     formState: {errors},
     handleSubmit,
-    getValues,
-    reset
   } = useForm({defaultValues});
 
   const [response, setResponse] = useState<Response>();
@@ -64,7 +62,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex justify-content-center">
+    <div className="flex justify-content-center align-items-center h-screen bg-blue-100">
       <Card title="O que é fotossíntese?" className="w-full md:w-30rem">
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-column gap-2">
           <Toast ref={toast}/>
@@ -96,7 +94,6 @@ export default function Home() {
           </div>
         )}
       </Card>
-
     </div>
   )
 }
