@@ -1,4 +1,4 @@
-import { Question } from "@/types/api";
+import { Question, QuestionCreate } from "@/types/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -31,7 +31,7 @@ export async function PUT(
 ) {
   const id = params.id;
 
-  const body: Question = await request.json();
+  const body: QuestionCreate = await request.json();
 
   if (id) {
     const response = await fetch(`${API_URL}/question/update/${id}`, {
@@ -42,7 +42,7 @@ export async function PUT(
       },
       body: JSON.stringify({
         question: body.question,
-        answers: body.question,
+        answers: body.answers,
       }),
     });
 

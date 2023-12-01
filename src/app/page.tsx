@@ -51,8 +51,6 @@ export default function Home() {
   const onSubmit = (data: { answer: string }) => {
     setLoading(true);
 
-    console.log(data);
-
     axios
       .post<Response>("/api/grade", {
         answer: data.answer,

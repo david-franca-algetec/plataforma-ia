@@ -49,7 +49,7 @@ function Cadastro() {
 
   const defaultValues = {
     title: "",
-    answers: [{ answer: "", score: 0, feedback: "" }],
+    answers: [{ text: "", score: 0, feedback: "" }],
   };
 
   const [selectedAnswer, setSelectedAnswer] = useState<{
@@ -168,24 +168,21 @@ function Cadastro() {
   }, []);
 
   useEffect(() => {
-    if (selectedAnswer.key) {
-      console.log(selectedAnswer);
+    console.log(selectedAnswer);
 
+    if (selectedAnswer.key) {
       fetch(`/api/question/${selectedAnswer.key}`)
         .then(
           (res) => res.json() as Promise<{ answers: any[]; question: string }>
         )
         .then((data) => {
-          console.log(data);
           const answers = data.answers.map((a) => ({
-            text: a.answer,
+            text: a.text,
             score: a.score,
             feedback: a.feedback,
           }));
-          console.log(answers);
 
           reset({ question: data.question, answers });
-          answers.forEach((a) => append(a));
         });
     }
   }, [append, reset, selectedAnswer]);
@@ -222,9 +219,11 @@ function Cadastro() {
                 >
                   Enunciado
                 </label>
-                <InputText
+                <InputTextarea
                   id={field.name}
                   {...field}
+                  rows={4}
+                  cols={30}
                   className={`w-full ${classNames({
                     "p-invalid": fieldState.error,
                   })}`}
