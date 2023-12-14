@@ -1,14 +1,16 @@
 "use client";
 
-import { Controller, useForm } from "react-hook-form";
-import { Button } from "primereact/button";
-import { classNames } from "primereact/utils";
-import { Toast } from "primereact/toast";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { InputTextarea } from "primereact/inputtextarea";
 import axios from "axios";
-import { Rating } from "primereact/rating";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
+import { InputTextarea } from "primereact/inputtextarea";
+import { Rating } from "primereact/rating";
+import { Toast } from "primereact/toast";
+import { classNames } from "primereact/utils";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+
 import { Questions } from "@/types/api";
 
 interface Response {
@@ -18,12 +20,25 @@ interface Response {
   feedback: string;
 }
 
+const models = {
+  ChatGPT: "chatgpt",
+  Yi: "yi",
+  Zypher: "zypher",
+};
+
 export default function Home() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const queryModule = searchParams.get("model");
+
   const toast = useRef<Toast>(null);
   const [selectedCity, setSelectedCity] = useState<{
     name: string;
     key: string | number;
   }>({ key: "", name: "" });
+
   const [loading, setLoading] = useState<boolean>(false);
   const [questions, setQuestions] = useState<Questions>();
 
@@ -55,6 +70,7 @@ export default function Home() {
       .post<Response>("/api/grade", {
         answer: data.answer,
         id: selectedCity.key,
+        module: queryModule,
       })
       .then((res) => {
         setResponse(res.data);
@@ -87,11 +103,28 @@ export default function Home() {
     [questions]
   );
 
+  const setModelQueryParam = useCallback(
+    (params: URLSearchParams, queryModule: string | null) => {
+      if (queryModule && Object.values(models).includes(queryModule)) {
+        params.set("model", queryModule);
+      } else {
+        params.set("model", models.ChatGPT);
+      }
+    },
+    []
+  );
+
   useEffect(() => {
     axios.get<Questions>("/api/question").then((res) => {
       setQuestions(res.data);
     });
   }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    setModelQueryParam(params, queryModule);
+    router.push(`${pathname}?${params.toString()}`);
+  }, [pathname, queryModule, router, searchParams, setModelQueryParam]);
 
   return (
     <div className="card">
