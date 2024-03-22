@@ -1,25 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useRouter } from "next/navigation";
-import {
-  useEventListener,
-  useUnmountEffect,
-} from "primereact/hooks";
-import React, { useContext, useEffect, useRef } from "react";
-import { classNames } from "primereact/utils";
+import {useEventListener, useUnmountEffect,} from "primereact/hooks";
+import React, {useContext, useEffect, useRef} from "react";
+import {classNames} from "primereact/utils";
 import AppSidebar from "./AppSidebar";
-import { LayoutContext } from "./context/layoutcontext";
-import { PrimeReactContext } from "primereact/api";
-import { ChildContainerProps, LayoutState, AppTopbarRef } from "@/types/types";
-import { usePathname, useSearchParams } from "next/navigation";
-import AppTopbar from "@/layout/AppTopbar";
+import {LayoutContext} from "./context/layoutcontext";
+import {AppTopbarRef, ChildContainerProps, LayoutState} from "@/types/types";
+import {usePathname, useSearchParams} from "next/navigation";
+import AppTopBar from "@/layout/AppTopbar";
 import AppConfig from "@/layout/AppConfig";
 
 const Layout = ({ children }: ChildContainerProps) => {
   const { layoutConfig, layoutState, setLayoutState } = useContext(LayoutContext);
-  const { setRipple } = useContext(PrimeReactContext);
-  const topbarRef = useRef<AppTopbarRef>(null);
+  const topBarRef = useRef<AppTopbarRef>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [bindMenuOutsideClickListener, unbindMenuOutsideClickListener] =
     useEventListener({
@@ -28,8 +22,8 @@ const Layout = ({ children }: ChildContainerProps) => {
         const isOutsideClicked = !(
           sidebarRef.current?.isSameNode(event.target as Node) ||
           sidebarRef.current?.contains(event.target as Node) ||
-          topbarRef.current?.menubutton?.isSameNode(event.target as Node) ||
-          topbarRef.current?.menubutton?.contains(event.target as Node)
+          topBarRef.current?.menubutton?.isSameNode(event.target as Node) ||
+          topBarRef.current?.menubutton?.contains(event.target as Node)
         );
 
         if (isOutsideClicked) {
@@ -52,10 +46,10 @@ const Layout = ({ children }: ChildContainerProps) => {
     type: "click",
     listener: (event) => {
       const isOutsideClicked = !(
-        topbarRef.current?.topbarmenu?.isSameNode(event.target as Node) ||
-        topbarRef.current?.topbarmenu?.contains(event.target as Node) ||
-        topbarRef.current?.topbarmenubutton?.isSameNode(event.target as Node) ||
-        topbarRef.current?.topbarmenubutton?.contains(event.target as Node)
+        topBarRef.current?.topbarmenu?.isSameNode(event.target as Node) ||
+        topBarRef.current?.topbarmenu?.contains(event.target as Node) ||
+        topBarRef.current?.topbarmenubutton?.isSameNode(event.target as Node) ||
+        topBarRef.current?.topbarmenubutton?.contains(event.target as Node)
       );
 
       if (isOutsideClicked) {
@@ -139,7 +133,7 @@ const Layout = ({ children }: ChildContainerProps) => {
   return (
     <React.Fragment>
       <div className={containerClass}>
-        <AppTopbar ref={topbarRef} />
+        <AppTopBar ref={topBarRef}/>
         <div ref={sidebarRef} className="layout-sidebar">
           <AppSidebar />
         </div>

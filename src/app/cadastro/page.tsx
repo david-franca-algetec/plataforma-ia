@@ -190,7 +190,7 @@ function Cadastro() {
   return (
     <div>
       <Toast ref={toast} />
-      <Card className="mb-2" title="Cadastro de Pergunta"></Card>
+      <Card className="mb-2" title="Cadastro de Pergunta" />
       <div className="w-full">
         <Dropdown
           value={selectedAnswer}
