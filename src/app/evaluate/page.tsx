@@ -25,10 +25,6 @@ import remarkIns from 'remark-ins';
 import remarkMath from 'remark-math';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
-import Lottie from 'react-lottie';
-import * as animationData from '../../animations/evaluation.json';
-import {Dialog} from "primereact/dialog";
-
 
 interface DropdownItem {
   label: string;
@@ -52,22 +48,13 @@ const remarkPlugins = [
 ];
 
 function Evaluate() {
-  const [modelItem, setModelItem] = useState<string | null>('Complete');
+  const [modelItem, setModelItem] = useState<string | null>('Simple');
   const [typeItem, setTypeItem] = useState<string | null>('archive');
   const [inputValue, setInputValue] = useState<string>('');
   const [filesTotalSize, setFilesTotalSize] = useState(0);
   const uploadRef = useRef<FileUpload>(null);
   const [response, setResponse] = useState<ApiResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice"
-    }
-  };
 
   const modelItems: DropdownItem[] = useMemo(
     () => [
@@ -338,16 +325,6 @@ function Evaluate() {
           </div>
         </div>
       </Card>
-      {/*<Dialog visible={!isLoading} style={{ width: '50vw' }} onHide={*/}
-      {/*  () => {*/}
-      {/*    setIsLoading(false);*/}
-      {/*  }*/}
-      {/*}>*/}
-      {/*  <Lottie*/}
-      {/*    options={defaultOptions}*/}
-      {/*    width={400}*/}
-      {/*  />*/}
-      {/*</Dialog>*/}
       {response && (
         <Card className="mb-2">
           <MarkdownPreview
