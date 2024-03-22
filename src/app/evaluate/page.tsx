@@ -73,6 +73,9 @@ function Evaluate() {
     []
   );
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL
+  const API_KEY = process.env.NEXT_PUBLIC_API_KEY
+
   const onSubmit = useCallback(() => {
     setIsLoading(true);
     setResponse(null);
@@ -90,19 +93,44 @@ function Evaluate() {
       formData.append('file', textFile);
     }
 
-    formData.append('model', modelItem!);
+    formData.append('data', JSON.stringify({
+      type: modelItem
+    }));
 
-    fetch('/api/evaluate', {
+    if (!API_URL || !API_KEY) {
+      toast.current?.show({severity: 'error', summary: 'Error', detail: 'API_URL or API_KEY is not defined', life: 3000});
+      setIsLoading(false);
+      return;
+    }
+
+    const url = `${API_URL}/grades`
+    
+    fetch(url, {
       method: 'POST',
-      body: formData,
-    }).then(res => res.json()).then(res => {
+      headers: {
+        'x-api-key': API_KEY
+      },
+      body: formData
+    }).then((res) => res.json()).then((res) => {
+      console.log(res)
       setResponse(res);
       setIsLoading(false);
     }).catch(error => {
       toast.current?.show({severity: 'error', summary: 'Error', detail: error, life: 3000});
       setIsLoading(false);
     })
-  }, [modelItem, inputValue, uploadRef]);
+
+    // fetch('/api/evaluate', {
+    //   method: 'POST',
+    //   body: formData,
+    // }).then(res => res.json()).then(res => {
+    //   setResponse(res);
+    //   setIsLoading(false);
+    // }).catch(error => {
+    //   toast.current?.show({severity: 'error', summary: 'Error', detail: error, life: 3000});
+    //   setIsLoading(false);
+    // })
+  }, [inputValue, modelItem, API_URL, API_KEY]);
 
   const onTemplateSelect = (
     e: FileUploadSelectEvent,
@@ -194,6 +222,7 @@ function Evaluate() {
     const file = inFile as File;
     return (
       <div className="flex align-items-center flex-wrap">
+        <Toast ref={toast} />
         <div
           className="flex align-items-center"
           style={{width: "calc(40% + 100px)"}}
