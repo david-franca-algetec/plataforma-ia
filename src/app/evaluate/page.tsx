@@ -25,6 +25,7 @@ import remarkIns from 'remark-ins';
 import remarkMath from 'remark-math';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
+import {Toast} from "primereact/toast";
 
 interface DropdownItem {
   label: string;
@@ -55,6 +56,7 @@ function Evaluate() {
   const uploadRef = useRef<FileUpload>(null);
   const [response, setResponse] = useState<ApiResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const toast = useRef<Toast>(null);
 
   const modelItems: DropdownItem[] = useMemo(
     () => [
@@ -97,7 +99,7 @@ function Evaluate() {
       setResponse(res);
       setIsLoading(false);
     }).catch(error => {
-      console.log(error);
+      toast.current?.show({severity: 'error', summary: 'Error', detail: error, life: 3000});
       setIsLoading(false);
     })
   }, [modelItem, inputValue, uploadRef]);
