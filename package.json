@@ -1,6 +1,6 @@
 {
-  "name": "plataforma",
-  "version": "0.1.0",
+  "name": "projeto-avaliativo",
+  "version": "1.0.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
