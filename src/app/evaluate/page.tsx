@@ -73,10 +73,7 @@ function Evaluate() {
     []
   );
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL
-  const API_KEY = process.env.NEXT_PUBLIC_API_KEY
-
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(async () => {
     setIsLoading(true);
     setResponse(null);
     const docFile = uploadRef.current?.getFiles()[0];
@@ -97,18 +94,25 @@ function Evaluate() {
       type: modelItem
     }));
 
-    if (!API_URL || !API_KEY) {
-      toast.current?.show({severity: 'error', summary: 'Error', detail: 'API_URL or API_KEY is not defined', life: 3000});
+    const res = await fetch('/api/evaluate')
+
+    if (!res.ok) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Something went wrong',
+        life: 3000
+      });
       setIsLoading(false);
       return;
     }
 
-    const url = `${API_URL}/grades`
-    
-    fetch(url, {
+    const {url, key} = await res.json();
+
+    fetch(`${url}/grades`, {
       method: 'POST',
       headers: {
-        'x-api-key': API_KEY
+        'x-api-key': key
       },
       body: formData
     }).then((res) => res.json()).then((res) => {
@@ -130,7 +134,7 @@ function Evaluate() {
     //   toast.current?.show({severity: 'error', summary: 'Error', detail: error, life: 3000});
     //   setIsLoading(false);
     // })
-  }, [inputValue, modelItem, API_URL, API_KEY]);
+  }, [inputValue, modelItem]);
 
   const onTemplateSelect = (
     e: FileUploadSelectEvent,
