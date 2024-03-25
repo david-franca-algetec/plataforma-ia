@@ -116,7 +116,6 @@ function Evaluate() {
       },
       body: formData
     }).then((res) => res.json()).then((res) => {
-      console.log(res)
       setResponse(res);
       setIsLoading(false);
     }).catch(error => {

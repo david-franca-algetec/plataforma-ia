@@ -168,8 +168,6 @@ function Cadastro() {
   }, []);
 
   useEffect(() => {
-    console.log(selectedAnswer);
-
     if (selectedAnswer.key) {
       fetch(`/api/question/${selectedAnswer.key}`)
         .then(
