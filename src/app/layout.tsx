@@ -1,6 +1,4 @@
 import type {Metadata} from "next";
-
-import Layout from '../layout/layout';
 import 'primereact/resources/primereact.css';
 import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
@@ -28,9 +26,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     </head>
       <body>
       <Providers>
-        <Layout>
-          {children}
-        </Layout>
+        {children}
       </Providers>
       </body>
     </html>
