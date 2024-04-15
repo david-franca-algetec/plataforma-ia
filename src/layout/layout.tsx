@@ -1,18 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import {useEventListener, useUnmountEffect,} from "primereact/hooks";
-import React, {useContext, useEffect, useRef} from "react";
-import {classNames} from "primereact/utils";
+import { useEventListener, useUnmountEffect } from "primereact/hooks";
+import React, { useContext, useEffect, useRef } from "react";
+import { classNames } from "primereact/utils";
 import AppSidebar from "./AppSidebar";
-import {LayoutContext} from "./context/layoutcontext";
-import {AppTopbarRef, ChildContainerProps, LayoutState} from "@/types/types";
-import {usePathname, useSearchParams} from "next/navigation";
+import { LayoutContext } from "./context/layoutcontext";
+import { AppTopbarRef, ChildContainerProps, LayoutState } from "@/types/types";
+import { usePathname, useSearchParams } from "next/navigation";
 import AppTopBar from "@/layout/AppTopbar";
 import AppConfig from "@/layout/AppConfig";
 
 const Layout = ({ children }: ChildContainerProps) => {
-  const { layoutConfig, layoutState, setLayoutState } = useContext(LayoutContext);
+  const { layoutConfig, layoutState, setLayoutState } =
+    useContext(LayoutContext);
   const topBarRef = useRef<AppTopbarRef>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [bindMenuOutsideClickListener, unbindMenuOutsideClickListener] =
@@ -133,7 +134,7 @@ const Layout = ({ children }: ChildContainerProps) => {
   return (
     <React.Fragment>
       <div className={containerClass}>
-        <AppTopBar ref={topBarRef}/>
+        <AppTopBar ref={topBarRef} />
         <div ref={sidebarRef} className="layout-sidebar">
           <AppSidebar />
         </div>
