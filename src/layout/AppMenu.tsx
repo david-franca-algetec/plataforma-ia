@@ -10,7 +10,7 @@ const AppMenu = () => {
     {
       label: "Revisor",
       items: [
-        { label: "Perguntas", icon: "pi pi-fw pi-home", to: "/" },
+        { label: "Início", icon: "pi pi-fw pi-home", to: "/" },
         { label: "Cadastro", icon: "pi pi-fw pi-building", to: "/cadastro" },
         { label: "Avaliar", icon: "pi pi-fw pi-check", to: "/evaluate" },
         { label: "Documentos", icon: "pi pi-fw pi-check", to: "/docs" },
