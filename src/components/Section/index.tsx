@@ -115,17 +115,17 @@ export const SectionComponent = ({ section, id, setSections, sections }: Section
               label="Editar Texto da Seção"
             />
           </div>
-          <div className="field">
-            <Button
-              icon="pi pi-plus"
-              severity="help"
-              text
-              rounded
-              raised
-              onClick={() => setAddVisible(true)}
-              label="Adicionar Seção"
-            />
-          </div>
+          {/*<div className="field">*/}
+          {/*  <Button*/}
+          {/*    icon="pi pi-plus"*/}
+          {/*    severity="help"*/}
+          {/*    text*/}
+          {/*    rounded*/}
+          {/*    raised*/}
+          {/*    onClick={() => setAddVisible(true)}*/}
+          {/*    label="Adicionar Seção"*/}
+          {/*  />*/}
+          {/*</div>*/}
         </AccordionTab>
       </Accordion>
       <Dialog
