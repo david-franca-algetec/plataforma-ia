@@ -61,7 +61,7 @@ export function Create({id}: CreateProps) {
   return (
     <div className="grid">
       <div className="col-12">
-        <div className="card p-fluid">
+        <div className="p-fluid">
           <h5>Adicionar Trabalho</h5>
           <div className="field">
             <label htmlFor="name">Nome</label>

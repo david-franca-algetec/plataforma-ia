@@ -198,7 +198,6 @@ function Evaluate() {
       >
         <div className="grid">
           <div className="col-12 md:col-6">
-
             {chooseButton}
           </div>
           <div className="col-12 md:col-6">
