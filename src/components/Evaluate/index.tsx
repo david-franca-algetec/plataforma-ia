@@ -1,5 +1,5 @@
-import { Card } from "primereact/card";
-import React, { useState } from "react";
+import {Card} from "primereact/card";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import MarkdownPreview from "@uiw/react-markdown-preview";
 import remarkTypography from "@mavrin/remark-typograf";
 import rehypeKatex from "rehype-katex";
@@ -11,7 +11,11 @@ import remarkIns from "remark-ins";
 import remarkMath from "remark-math";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
-import { res } from "./res";
+import {jsonToMarkdown} from "@/utils/jsonToMarkDown";
+import {Toast} from "primereact/toast";
+import {useHomeworkStore} from "@/providers/homework-provider";
+import {Section} from "@/stores/homework-store";
+import {ProgressSpinner} from "primereact/progressspinner";
 
 interface ApiResponse {
   data: string;
@@ -29,39 +33,108 @@ const remarkPlugins = [
   remarkFlexibleContainers,
 ];
 
-function jsonToMarkdown(jsonString: string) {
-  // Analisar a string JSON para um objeto
-  const obj = JSON.parse(jsonString) as {
-    feedback_diagnostico_e_teorizacao: string;
-    feedback_planejamento_e_desenvolvimento: string;
-    feedback_relato_coletivo: string;
-    feedback_relato_experiencia_individual: string;
-    pontuacao_diagnostico_e_teorizacao: number;
-    pontuacao_planejamento_e_desenvolvimento: number;
-    pontuacao_relato_coletivo: number;
-    pontuacao_relato_experiencia_individual: number;
-    pontuacao_total: number;
-    comentarios_finais: string;
-  };
-
-  // Iniciar a string Markdown
-  let markdown = "### Tabela Rubrica\n\n";
-  markdown +=
-    "| Critérios                                   | Feedback                                                                                              | Pontuação |\n";
-  markdown +=
-    "|---------------------------------------------|-------------------------------------------------------------------------------------------------------|-----------|\n";
-  markdown += `| 1. Diagnóstico e teorização                 | ${obj.feedback_diagnostico_e_teorizacao} | ${obj.pontuacao_diagnostico_e_teorizacao}       |\n`;
-  markdown += `| 2. Planejamento e desenvolvimento do projeto| ${obj.feedback_planejamento_e_desenvolvimento} | ${obj.pontuacao_planejamento_e_desenvolvimento}       |\n`;
-  markdown += `| 3. Relato coletivo                          | ${obj.feedback_relato_coletivo} | ${obj.pontuacao_relato_coletivo}       |\n`;
-  markdown += `| 4. Relato de experiência individual         | ${obj.feedback_relato_experiencia_individual} | ${obj.pontuacao_relato_experiencia_individual}       |\n\n`;
-  markdown += `### Pontuação Total\n\n**${obj.pontuacao_total} / 10.0**\n\n`;
-  markdown += `### Comentários Finais\n\n${obj.comentarios_finais}`;
-
-  return markdown;
+interface EvaluateProps {
+  id: string | null;
 }
 
-export function Evaluate() {
-  const [response, setResponse] = useState<ApiResponse | null>(res);
+export function Evaluate({id}: EvaluateProps) {
+  const [response, setResponse] = useState<ApiResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const {findHomework} = useHomeworkStore((state) => state)
+
+  const toast = useRef<Toast>(null);
+
+  let textContent = '';
+
+  function writeSections(sections?: Section[], indent = '') {
+    sections?.forEach((section) => {
+      textContent += `${indent}${section.key} - ${section.title}\n${indent}${section.text || ''}\n\n`;
+      if (section.sections) {
+        writeSections(section.sections, `${indent}  `);
+      }
+    });
+  }
+
+  const onSubmit = useCallback(async () => {
+    setIsLoading(true);
+    setResponse(null);
+
+    const homework = findHomework(id);
+
+    if (!homework) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Trabalho nao encontrado!',
+        life: 3000
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    textContent = `Homework ID: ${homework.id}\\nTitle: ${homework.title}\\n\\n`;
+
+    writeSections(homework.sections)
+
+    const textFile = new Blob([textContent], {type: 'text/plain'});
+
+    const formData = new FormData();
+
+    formData.append('file', textFile);
+    formData.append('data', JSON.stringify({
+      type: 'Complete'
+    }));
+
+    const response = await fetch('/api/evaluate')
+
+    if (!response.ok) {
+      toast.current?.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Something went wrong',
+        life: 3000
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    const {url, key} = await response.json();
+
+    fetch(`${url}/grades`, {
+      method: 'POST',
+      headers: {
+        'x-api-key': key
+      },
+      body: formData
+    }).then((res) => res.json()).then((res) => {
+      setResponse(res);
+      setIsLoading(false);
+    }).catch(error => {
+      toast.current?.show({severity: 'error', summary: 'Error', detail: error, life: 3000});
+      setIsLoading(false);
+    })
+  }, [id, findHomework]);
+
+  useEffect(() => {
+    if (id) {
+      onSubmit().then(() => {
+
+          toast.current?.show({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Trabalho avaliado com sucesso!',
+            life: 3000
+          });
+
+      });
+    }
+  }, [id, onSubmit]);
+
+  if (isLoading) {
+    return <Card className="mb-2 text-center">
+      <ProgressSpinner />
+    </Card>;
+  }
 
   return (
     response && (

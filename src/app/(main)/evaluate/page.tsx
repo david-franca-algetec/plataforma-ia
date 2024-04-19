@@ -26,6 +26,7 @@ import remarkMath from 'remark-math';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import {Toast} from "primereact/toast";
+import {jsonToMarkdown} from '@/utils/jsonToMarkDown';
 
 interface DropdownItem {
   label: string;
@@ -225,7 +226,6 @@ function Evaluate() {
     const file = inFile as File;
     return (
       <div className="flex align-items-center flex-wrap">
-        <Toast ref={toast} />
         <div
           className="flex align-items-center"
           style={{width: "calc(40% + 100px)"}}
@@ -273,37 +273,9 @@ function Evaluate() {
     );
   };
 
-  function jsonToMarkdown(jsonString: string) {
-    // Analisar a string JSON para um objeto
-    const obj = JSON.parse(jsonString) as {
-      feedback_diagnostico_e_teorizacao: string;
-      feedback_planejamento_e_desenvolvimento: string;
-      feedback_relato_coletivo: string;
-      feedback_relato_experiencia_individual: string;
-      pontuacao_diagnostico_e_teorizacao: number;
-      pontuacao_planejamento_e_desenvolvimento: number;
-      pontuacao_relato_coletivo: number;
-      pontuacao_relato_experiencia_individual: number;
-      pontuacao_total: number;
-      comentarios_finais: string;
-    };
-
-    // Iniciar a string Markdown
-    let markdown = "### Tabela Rubrica\n\n";
-    markdown += "| Critérios                                   | Feedback                                                                                              | Pontuação |\n";
-    markdown += "|---------------------------------------------|-------------------------------------------------------------------------------------------------------|-----------|\n";
-    markdown += `| 1. Diagnóstico e teorização                 | ${obj.feedback_diagnostico_e_teorizacao} | ${obj.pontuacao_diagnostico_e_teorizacao}       |\n`;
-    markdown += `| 2. Planejamento e desenvolvimento do projeto| ${obj.feedback_planejamento_e_desenvolvimento} | ${obj.pontuacao_planejamento_e_desenvolvimento}       |\n`;
-    markdown += `| 3. Relato coletivo                          | ${obj.feedback_relato_coletivo} | ${obj.pontuacao_relato_coletivo}       |\n`;
-    markdown += `| 4. Relato de experiência individual         | ${obj.feedback_relato_experiencia_individual} | ${obj.pontuacao_relato_experiencia_individual}       |\n\n`;
-    markdown += `### Pontuação Total\n\n**${obj.pontuacao_total} / 10.0**\n\n`;
-    markdown += `### Comentários Finais\n\n${obj.comentarios_finais}`;
-
-    return markdown;
-  }
-
   return (
     <div>
+      <Toast ref={toast} />
       <Card className="mb-2" title="Avaliar Trabalho">
         <form noValidate onSubmit={onSubmit} className="p-fluid formgrid grid">
           <div className="field col-12 md:col-6">

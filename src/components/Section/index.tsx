@@ -16,19 +16,14 @@ interface Section {
   sections?: Section[];
 }
 
-/**
- * Renders a section component.
- *
- * @param {Object} props - The component props.
- * @param {Section} props.section - The section object to render.
- * @returns {JSX.Element} The rendered section component.
- */
-export const SectionComponent: React.FC<{
+interface SectionProps {
   section: Section;
   id: string;
   sections: Section[];
   setSections: (sections: Section[]) => void;
-}> = ({ section, id, setSections, sections }) => {
+}
+
+export const SectionComponent = ({ section, id, setSections, sections }: SectionProps) => {
   const [content, setContent] = useState("");
   const [newSectionName, setNewSectionName] = useState("");
   const [editVisible, setEditVisible] = useState(false);
@@ -92,7 +87,7 @@ export const SectionComponent: React.FC<{
 
   return (
     <div className="field">
-      <Accordion>
+      <Accordion multiple activeIndex={[0]}>
         <AccordionTab header={`${section.key} - ${section.title}`}>
           {section.text && parse(section.text)}
           {subSections?.map((sub, i) => (

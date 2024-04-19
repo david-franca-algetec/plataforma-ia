@@ -1,0 +1,84 @@
+[
+  {
+    "key": "1",
+    "title": "Diagnóstico e Teorização",
+    "sections": [
+      {
+        "key": "1.1",
+        "title": "Identificação das partes interessadas e parceiros"
+      },
+      {
+        "key": "1.2",
+        "title": "Problemática e/ou problemas identificados"
+      },
+      {
+        "key": "1.3",
+        "title": "Justificativa"
+      },
+      {
+        "key": "1.4",
+        "title": "Objetivos/resultados/efeitos a serem alcançados (em relação ao problema identificado e sob a perspectiva dos públicos envolvidos)"
+      },
+      {
+        "key": "1.5",
+        "title": "Referencial teórico (subsídio teórico para propositura de ações da extensão)"
+      }
+    ]
+  },
+  {
+    "key": "2",
+    "title": "Planejamento e desenvolvimento do projeto",
+    "sections": [
+      {
+        "key": "2.1",
+        "title": "Plano de trabalho"
+      },
+      {
+        "key": "2.2",
+        "title": "Descrição da forma de envolvimento do público participante na formulação do projeto, seu desenvolvimento e avaliação, bem como as estratégias utilizadas pelo grupo para mobilizá-los."
+      },
+      {
+        "key": "2.3",
+        "title": "Grupo de trabalho"
+      },
+      {
+        "key": "2.4",
+        "title": "Metas, critérios ou indicadores de avaliação do projeto"
+      },
+      {
+        "key": "2.5",
+        "title": "Recursos previstos"
+      },
+      {
+        "key": "2.6",
+        "title": "Detalhamento técnico do projeto"
+      }
+    ]
+  },
+  {
+    "key": "3",
+    "title": "Encerramento do Projeto",
+    "sections": [
+      {
+        "key": "3.1",
+        "title": "Relatório Coletivo (podendo ser oral e escrita ou apenas escrita)"
+      },
+      {
+        "key": "3.2",
+        "title": "Avaliação de reação da parte interessada"
+      },
+      {
+        "key": "3.3",
+        "title": "Relato de Experiência Individual"
+      }
+    ]
+  },
+  {
+    "key": "4",
+    "title": "Ferramentas utilizadas no desenvolvimento"
+  },
+  {
+    "key": "5",
+    "title": "Base Teórica"
+  }
+]
