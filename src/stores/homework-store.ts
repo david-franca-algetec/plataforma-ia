@@ -24,6 +24,9 @@ export type HomeworkActions = {
   addHomework: (homework: Homework) => void
   removeHomework: (id: string) => void
   totalHomeworks: () => number
+  editHomework: (homework: Homework) => void
+  evaluateId: string | null
+  setEvaluateId: (id: string | null) => void
 }
 
 export type HomeworkStore = HomeworkState & HomeworkActions
@@ -33,7 +36,7 @@ export const defaultInitState: HomeworkState = {
     id: "1",
     title: "Exemplo de Trabalho",
     sections: nodes
-  }]
+  }],
 }
 
 // export const initCounterStore = (): CounterState => {
@@ -49,17 +52,22 @@ export const createHomeworkStore = (initState: HomeworkState = defaultInitState)
     persist<HomeworkStore>(
       (set, get) => ({
         ...initState,
-        findHomework: (id: string | null) => {
+        findHomework: (id) => {
           if (!id) return
           return get().homeworks.find(homework => homework.id === id)
         },
-        addHomework: (homework: Homework) => {
+        addHomework: (homework) => {
           set((state) => ({homeworks: [...state.homeworks, homework]}))
         },
-        removeHomework: (id: string) => {
+        removeHomework: (id) => {
           set({homeworks: get().homeworks.filter(homework => homework.id !== id)})
         },
         totalHomeworks: () => get().homeworks.length + 1,
+        editHomework: (homework) => {
+          set({homeworks: get().homeworks.map(h => h.id === homework.id ? homework : h)})
+        },
+        evaluateId: null,
+        setEvaluateId: (id) => set({evaluateId: id}),
       }),
       {
         name: 'homework-storage', // name of the item in the storage (must be unique)

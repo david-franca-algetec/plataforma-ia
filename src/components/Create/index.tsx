@@ -2,11 +2,12 @@
 
 import {Button} from "primereact/button";
 import {InputText} from "primereact/inputtext";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {RefObject, useCallback, useEffect, useMemo, useState} from "react";
 
 import {SectionComponent} from "@/components/Section";
 import rawSections from "./rawSections.json";
 import {useHomeworkStore} from "@/providers/homework-provider";
+import {Toast} from "primereact/toast";
 
 interface Section {
   key: string;
@@ -17,10 +18,11 @@ interface Section {
 
 interface CreateProps {
   id: string | null;
+  toast: RefObject<Toast>
 }
 
-export function Create({id}: CreateProps) {
-  const {findHomework, addHomework, totalHomeworks} = useHomeworkStore((state) => state)
+export function Create({id, toast}: CreateProps) {
+  const {findHomework, addHomework, totalHomeworks, editHomework} = useHomeworkStore((state) => state)
   const [sections, setSections] = useState<Section[]>(rawSections);
   const [docName, setDocName] = useState<string>("");
 
@@ -40,6 +42,15 @@ export function Create({id}: CreateProps) {
   }, [findHomework]);
 
   const handleFinish = () => {
+    if (!docName) return;
+    if (id) {
+      editHomework({
+        id,
+        title: docName,
+        sections: sections
+      })
+      return
+    }
     addHomework({
       id: totalHomeworks().toString(),
       title: docName,
@@ -60,11 +71,12 @@ export function Create({id}: CreateProps) {
 
   return (
     <div className="grid">
+      <Toast />
       <div className="col-12">
-        <div className="p-fluid">
+        <div className="card p-fluid">
           <h5>Adicionar Trabalho</h5>
           <div className="field">
-            <label htmlFor="name">Nome</label>
+            <label htmlFor="name">Título</label>
             <InputText
               id="name"
               type="text"
@@ -84,7 +96,7 @@ export function Create({id}: CreateProps) {
 
           <div className="field">
             <Button
-              label="Salvar"
+              label="Salvar Rascunho"
               icon="pi pi-save"
               className="p-button-raised p-button-rounded"
               onClick={handleFinish}

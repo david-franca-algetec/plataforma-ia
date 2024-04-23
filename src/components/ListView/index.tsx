@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {RefObject} from 'react';
 import {DataView} from "primereact/dataview";
 import {Button} from "primereact/button";
 import {useHomeworkStore} from "@/providers/homework-provider";
@@ -8,12 +8,11 @@ import {Homework} from "@/stores/homework-store";
 
 interface ListViewProps {
   setId: (id: string | null) => void;
-  setEvaluateId: (id: string | null) => void;
+  toast: RefObject<Toast>;
 }
 
-export function ListView({setId, setEvaluateId}: ListViewProps) {
-  const toast = useRef<Toast>(null);
-  const {homeworks, removeHomework} = useHomeworkStore((state) => state)
+export function ListView({setId, toast}: ListViewProps) {
+  const {homeworks, removeHomework, setEvaluateId, evaluateId} = useHomeworkStore((state) => state)
 
   const reject = () => {
     toast.current?.show({severity: 'info', summary: 'Ação cancelada pelo usuário', life: 3000});
@@ -41,17 +40,52 @@ export function ListView({setId, setEvaluateId}: ListViewProps) {
     });
   };
 
+  const confirmEvaluate = (id: string) => {
+    confirmDialog({
+      message: 'O resultado será exibido nessa página após o processamento.\n Você possuirá 1 (uma) hora para cancelar o envio deste trabalho. Deseja continuar?',
+      header: 'O trabalho será enviado para avaliação.',
+      icon: 'pi pi-exclamation-triangle',
+      focusOnShow: true,
+      accept: () => setEvaluateId(id),
+      reject
+    });
+  };
+
+  const cancelEvaluate = () => {
+    confirmDialog({
+      message: 'Deseja continuar?',
+      header: 'Cancelar o envio do trabalho?',
+      icon: 'pi pi-exclamation-triangle',
+      focusOnShow: true,
+      accept: () => setEvaluateId(null),
+      reject
+    });
+  };
+
+  const handleEvaluate = (id: string) => {
+    if (evaluateId === id) {
+      cancelEvaluate()
+    }
+    if (evaluateId === null) {
+      confirmEvaluate(id)
+    }
+  }
+
   const dataViewListItem = (data: Homework) => {
     return (
       <div className="col-12">
         <div className="flex flex-column md:flex-row align-items-center p-3 w-full">
           <Button
-            icon="pi pi-check-circle"
-            label="Avaliar"
+            icon="pi pi-send"
+            label={evaluateId === data.id ? 'Cancelar Envio' : "Enviar Trabalho"}
             severity="success"
+            disabled={evaluateId !== null && evaluateId !== data.id}
             size="small"
             className="mb-2"
-            onClick={() => setEvaluateId(data.id)}
+            style={{
+              visibility: evaluateId === null ? 'visible' : evaluateId !== data.id ? 'hidden' : 'visible'
+            }}
+            onClick={() => handleEvaluate(data.id)}
           />
           <div className="flex-1 flex flex-column align-items-center text-center px-4">
             <div className="font-bold text-2xl">{data.title}</div>
@@ -135,8 +169,8 @@ export function ListView({setId, setEvaluateId}: ListViewProps) {
 
   return (
     <>
-      <Toast ref={toast}/>
       <ConfirmDialog/>
+      <h5>Rascunhos Salvos</h5>
       <DataView
         value={homeworks}
         layout="list"
