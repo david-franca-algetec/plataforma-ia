@@ -12,7 +12,7 @@ interface ListViewProps {
 }
 
 export function ListView({setId, toast}: ListViewProps) {
-  const {homeworks, removeHomework, setEvaluateId, evaluateId} = useHomeworkStore((state) => state)
+  const {homeworks, removeHomework, setEvaluateId, evaluateId, timestamp, setTimestamp} = useHomeworkStore((state) => state)
 
   const reject = () => {
     toast.current?.show({severity: 'info', summary: 'Ação cancelada pelo usuário', life: 3000});
@@ -63,11 +63,17 @@ export function ListView({setId, toast}: ListViewProps) {
   };
 
   const handleEvaluate = (id: string) => {
+    if (timestamp !== null && Date.now() - timestamp > 1000 * 60 * 60) {
+      toast.current?.show({severity: 'error', summary: 'Erro', detail: 'O tempo limite para o envio do trabalho foi atingido', life: 3000});
+      return
+    }
     if (evaluateId === id) {
       cancelEvaluate()
+      setTimestamp(null)
     }
     if (evaluateId === null) {
       confirmEvaluate(id)
+      setTimestamp(Date.now())
     }
   }
 
@@ -78,7 +84,7 @@ export function ListView({setId, toast}: ListViewProps) {
           <Button
             icon="pi pi-send"
             label={evaluateId === data.id ? 'Cancelar Envio' : "Enviar Trabalho"}
-            severity="success"
+            severity={evaluateId === data.id ? 'warning' : 'success'}
             disabled={evaluateId !== null && evaluateId !== data.id}
             size="small"
             className="mb-2"

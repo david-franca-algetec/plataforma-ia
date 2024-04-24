@@ -27,6 +27,8 @@ export type HomeworkActions = {
   editHomework: (homework: Homework) => void
   evaluateId: string | null
   setEvaluateId: (id: string | null) => void
+  timestamp: number | null
+  setTimestamp: (timestamp: number | null) => void
 }
 
 export type HomeworkStore = HomeworkState & HomeworkActions
@@ -68,6 +70,8 @@ export const createHomeworkStore = (initState: HomeworkState = defaultInitState)
         },
         evaluateId: null,
         setEvaluateId: (id) => set({evaluateId: id}),
+        timestamp: null,
+        setTimestamp: (timestamp) => set({timestamp}),
       }),
       {
         name: 'homework-storage', // name of the item in the storage (must be unique)
