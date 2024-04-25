@@ -1,6 +1,6 @@
 'use client';
 
-import React, {Fragment, RefObject, useCallback, useEffect, useRef, useState} from "react";
+import React, {Fragment, RefObject, useCallback, useRef, useState} from "react";
 import MarkdownPreview from "@uiw/react-markdown-preview";
 import remarkTypography from "@mavrin/remark-typograf";
 import rehypeKatex from "rehype-katex";
@@ -120,11 +120,11 @@ export function Evaluate({toast}: EvaluateProps) {
     })
   }, [findHomework, evaluateId, writeSections, toast]);
 
-  useEffect(() => {
-    if (evaluateId) {
-      // onSubmit().then()
-    }
-  }, [evaluateId, onSubmit]);
+  // useEffect(() => {
+  //   if (evaluateId) {
+  //     onSubmit().then()
+  //   }
+  // }, [evaluateId, onSubmit]);
 
   // if (isLoading) {
   //   return <div className="mb-2 text-center">
@@ -132,24 +132,27 @@ export function Evaluate({toast}: EvaluateProps) {
   //   </div>;
   // }
 
-  // return (
-  //   response && (
-  //     <div>
-  //       <MarkdownPreview
-  //         source={jsonToMarkdown(response.data)}
-  //         rehypePlugins={rehypePlugins}
-  //         remarkPlugins={remarkPlugins}
-  //         wrapperElement={{
-  //           "data-color-mode": "light",
-  //         }}
-  //       />
-  //     </div>
-  //   )
-  // );
+  if (response) {
+    return (
+      <div>
+        <MarkdownPreview
+          source={jsonToMarkdown(response.data)}
+          rehypePlugins={rehypePlugins}
+          remarkPlugins={remarkPlugins}
+          wrapperElement={{
+            "data-color-mode": "light",
+          }}
+        />
+      </div>
+    );
+  }
 
   return evaluateId ? (
     <div className="mb-2 text-center">
-      <h4>Trabalho em análise...</h4>
+      <h4 className="mt-2" onClick={onSubmit}>Trabalho em analise...</h4>
+      {isLoading &&
+          <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)"
+                           animationDuration=".5s"/>}
     </div>
   ) : <Fragment/>
 }
