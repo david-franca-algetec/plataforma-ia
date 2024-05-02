@@ -27,7 +27,7 @@ export function jsonToMarkdown(jsonString: string): string {
   markdown += `| 2. Planejamento e desenvolvimento do projeto| ${obj.feedback_planejamento_e_desenvolvimento}        |\n`;
   markdown += `| 3. Relato coletivo                          | ${obj.feedback_relato_coletivo}       |\n`;
   markdown += `| 4. Relato de experiência individual         | ${obj.feedback_relato_experiencia_individual}         |\n\n`;
-  markdown += `### Situação\n\n**${obj.pontuacao_total > 6 ? "Aprovado" : "Reprovado"}**\n\n`;
+  markdown += `### Situação\n\n**${obj.pontuacao_total >= 6 ? "Aprovado" : "Reprovado"}**\n\n`;
   markdown += `### Comentários Finais\n\n${obj.comentarios_finais}`;
 
   return markdown;
