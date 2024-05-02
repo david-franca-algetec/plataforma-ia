@@ -21,13 +21,13 @@ export function jsonToMarkdown(jsonString: string): string {
 
   // Iniciar a string Markdown
   let markdown = "### Tabela Rubrica\n\n";
-  markdown += "| Critérios                                   | Feedback                                                                                              | Pontuação |\n";
-  markdown += "|---------------------------------------------|-------------------------------------------------------------------------------------------------------|-----------|\n";
-  markdown += `| 1. Diagnóstico e teorização                 | ${obj.feedback_diagnostico_e_teorizacao} | ${obj.pontuacao_diagnostico_e_teorizacao} / 2       |\n`;
-  markdown += `| 2. Planejamento e desenvolvimento do projeto| ${obj.feedback_planejamento_e_desenvolvimento} | ${obj.pontuacao_planejamento_e_desenvolvimento} / 4.5      |\n`;
-  markdown += `| 3. Relato coletivo                          | ${obj.feedback_relato_coletivo} | ${obj.pontuacao_relato_coletivo} / 2.5      |\n`;
-  markdown += `| 4. Relato de experiência individual         | ${obj.feedback_relato_experiencia_individual} | ${obj.pontuacao_relato_experiencia_individual} / 1       |\n\n`;
-  markdown += `### Pontuação Total\n\n**${obj.pontuacao_total} / 10.0**\n\n`;
+  markdown += "| Critérios                                   | Feedback                                                                                               |\n";
+  markdown += "|---------------------------------------------|-------------------------------------------------------------------------|\n";
+  markdown += `| 1. Diagnóstico e teorização                 | ${obj.feedback_diagnostico_e_teorizacao}        |\n`;
+  markdown += `| 2. Planejamento e desenvolvimento do projeto| ${obj.feedback_planejamento_e_desenvolvimento}        |\n`;
+  markdown += `| 3. Relato coletivo                          | ${obj.feedback_relato_coletivo}       |\n`;
+  markdown += `| 4. Relato de experiência individual         | ${obj.feedback_relato_experiencia_individual}         |\n\n`;
+  markdown += `### Situação\n\n**${obj.pontuacao_total > 6 ? "Aprovado" : "Reprovado"}**\n\n`;
   markdown += `### Comentários Finais\n\n${obj.comentarios_finais}`;
 
   return markdown;
